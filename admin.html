@@ -1,0 +1,72 @@
+
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>لوحة التحكم</title>
+<style>
+:root{--a:#d4a73a;--bg:#f4f1ea;--sb:#15130f;--cd:#fff;--tx:#25221b;--mu:#8a8473;--bd:#e7e2d6}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:var(--tx);font-size:14px}
+input,select,button{font:inherit}input,select{width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:#fff;color:var(--tx)}
+.bt{background:var(--a);color:#15130f;border:0;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer;width:auto}
+.mu{color:var(--mu)}.er{color:#dc2626;min-height:18px;margin:6px 0}
+#lg{display:flex;min-height:100vh;align-items:center;justify-content:center;padding:16px}
+.bx{background:var(--cd);border-radius:18px;box-shadow:0 8px 30px #0002;padding:26px;width:100%;max-width:370px;text-align:center}
+.bx img{max-width:120px;max-height:80px}
+#app{display:none}
+aside{position:fixed;top:0;bottom:0;right:0;width:210px;background:var(--sb);padding:16px 0;overflow:auto}
+aside .lg{text-align:center;padding:6px 14px 16px;color:#fff;font-weight:700}aside .lg img{max-width:110px;max-height:70px;display:block;margin:0 auto 6px}
+aside a{display:block;padding:12px 22px;color:#cfc9b8;text-decoration:none;cursor:pointer}aside a.on{background:var(--a);color:#15130f;font-weight:700}
+main{margin-right:210px;padding:20px}
+h2{margin:0 0 14px}
+.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.c{background:var(--cd);border-radius:14px;padding:16px;box-shadow:0 1px 6px #0001}.c b{display:block;font-size:26px;margin-bottom:4px}.c.w{border:1px solid #f59e0b}
+.tw{overflow-x:auto;background:var(--cd);border-radius:14px;box-shadow:0 1px 6px #0001;margin-bottom:16px}.tw h3{margin:0;padding:14px 16px}
+table{width:100%;border-collapse:collapse;min-width:620px}th{background:#efe9d6;text-align:right;padding:10px;font-weight:600;white-space:nowrap}td{padding:9px 10px;border-top:1px solid var(--bd);vertical-align:middle}
+td select{padding:6px;width:auto}a.l{color:inherit}
+.ch{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}.ch button{border:1px solid var(--bd);background:#fff;border-radius:20px;padding:6px 12px;cursor:pointer}.ch button.on{background:var(--a);border-color:var(--a);font-weight:700}
+.bars{display:flex;align-items:flex-end;gap:6px;height:130px;padding:0 14px 14px}.bars div{flex:1;text-align:center;font-size:10px;color:var(--mu)}.bars i{display:block;background:var(--a);border-radius:5px 5px 0 0;min-height:2px;margin-bottom:3px}
+.rw{display:flex;align-items:center;gap:8px;padding:6px 16px}.rw span{min-width:110px}.rw u{flex:1;height:10px;background:#efe9d6;border-radius:6px;overflow:hidden;text-decoration:none}.rw u i{display:block;height:100%;background:var(--a)}
+@media(max-width:800px){aside{position:static;width:auto;display:flex;overflow-x:auto;padding:0}aside .lg{display:none}aside a{white-space:nowrap;padding:12px 14px}main{margin:0;padding:12px}}
+</style></head><body>
+<div id="lg"><div class="bx"><div id="lgl"></div><h2>لوحة التحكم</h2><p class="mu">أدخل رمز الدخول الذي أعطاك إياه مصمم المتجر</p><input id="k" type="password" dir="ltr" placeholder="رمز الدخول" onkeydown="if(event.key=='Enter')login()"><p id="er" class="er"></p><button class="bt" style="width:100%" onclick="login()">دخول</button></div></div>
+<div id="app"><aside id="sb"></aside><main id="mn"></main></div>
+<script>
+const D={"script":"https://script.google.com/macros/s/AKfycbwnDUmIKaoT5JNRDJgfPlnASDKcX39aMtPm0XCfMbTsTpjQBay1qz9j2haxmvQnm6oJBg/exec","name":"Cosmic","logo":"","pr":"#e11d48","pubAt":1794398453582,"low":5,"products":[{"title":"جهاز إزالة الشعر","stock":7},{"title":"كرة سلة","stock":0}]};
+const $=s=>document.querySelector(s),E=x=>String(x==null?'':x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ST={new:'🆕 جديد',noanswer:'📵 لا يرد',confirmed:'✅ مؤكد',shipped:'🚚 تم الشحن',delivered:'📦 تم التسليم',returned:'↩️ مرتجع',cancelled:'❌ ملغى'};
+const M=n=>Math.round(+n||0).toLocaleString('en')+' دج';
+const LS={g:k=>{try{return localStorage.getItem(k)||''}catch(e){return ''}},s:(k,v)=>{try{v?localStorage.setItem(k,v):localStorage.removeItem(k)}catch(e){}}};
+document.documentElement.style.setProperty('--a',D.pr||'#d4a73a');
+document.title='لوحة التحكم - '+D.name;
+const lgo=D.logo?'<img src="'+E(D.logo)+'" alt="">':'';$('#lgl').innerHTML=lgo;
+let K=LS.g('adm.k'),rows=[],tab='dash',flt='all',qs='',tm=0;
+const h0=location.hash.slice(1);if(/^[A-Za-z0-9]{20,}$/.test(h0)){K=h0;LS.s('adm.k',K);history.replaceState(null,'',location.pathname)}
+const jp=p=>new Promise((res,rej)=>{const n='_c'+Math.random().toString(36).slice(2),sc=document.createElement('script');const c=()=>{delete window[n];sc.remove()},t=setTimeout(()=>{c();rej(0)},20000);window[n]=r=>{clearTimeout(t);c();res(r)};sc.onerror=()=>{clearTimeout(t);c();rej(0)};sc.src=D.script+(D.script.indexOf('?')>-1?'&':'?')+new URLSearchParams(Object.assign({a:K},p,{callback:n,t:Date.now()}));document.head.appendChild(sc)});
+const lv=r=>r.status!='cancelled'&&r.status!='returned',dt=r=>new Date(r.at),same=(a,b)=>a.toDateString()==b.toDateString();
+const inv=()=>D.products.filter(p=>p.stock>0).map(p=>{const sold=rows.filter(r=>r.product==p.title&&lv(r)&&+dt(r)>=D.pubAt).reduce((a,r)=>a+(+r.qty||1),0);return Object.assign({},p,{sold:sold,rem:p.stock-sold})});
+async function load(first){if(!D.script){$('#er').textContent='رابط Google Sheet غير مضاف للمتجر';return false}
+try{const r=await jp({act:'list'});if(!r||!r.ok){if(first)$('#er').textContent=r&&r.msg=='auth'?'رمز الدخول غير صحيح':'تعذر الاتصال: تأكد أن كود Apps Script محدّث ومنشور';return false}rows=r.rows;return true}catch(e){if(first)$('#er').textContent='تعذر الاتصال بالخادم';return false}}
+async function login(){K=$('#k').value.trim()||K;$('#er').textContent='⏳';if(await load(true)){LS.s('adm.k',K);start()}}
+function logout(){LS.s('adm.k','');location.reload()}
+function start(){$('#lg').style.display='none';$('#app').style.display='block';route();clearInterval(tm);tm=setInterval(async()=>{if(!document.hidden&&await load(false))draw()},30000)}
+const TABS=[['dash','لوحة التحكم'],['orders','الطلبات'],['stock','المخزون'],['stats','الإحصائيات']];
+function route(){const t=location.hash.slice(1);tab=TABS.some(x=>x[0]==t)?t:'dash';draw()}
+addEventListener('hashchange',()=>{if(K&&$('#app').style.display=='block')route()});
+function draw(){$('#sb').innerHTML='<div class="lg">'+lgo+E(D.name)+'</div>'+TABS.map(x=>'<a href="#'+x[0]+'" class="'+(tab==x[0]?'on':'')+'">'+x[1]+'</a>').join('')+'<a onclick="logout()">خروج</a>';
+$('#mn').innerHTML=({dash:vDash,orders:vOrders,stock:vStock,stats:vStats})[tab]()+(rows.length>=300?'<p class="mu">تظهر آخر 300 طلب فقط.</p>':'')+'<p class="mu">يتحدث تلقائيًا كل 30 ثانية.</p>';if(tab=='orders')tbl()}
+const card=(v,l,w)=>'<div class="c'+(w?' w':'')+'"><b>'+v+'</b><span class="mu">'+l+'</span></div>';
+const rowO=r=>'<tr><td>'+E(String(r.id).slice(-5))+'</td><td>'+E(r.name)+'</td><td dir="ltr">'+E(r.phone)+'</td><td>'+E(r.wilaya)+'</td><td>'+E(r.product)+'</td><td>'+M(r.total)+'</td><td>'+(ST[r.status]||E(r.status))+'</td></tr>';
+function vDash(){const n=new Date(),td=rows.filter(r=>same(dt(r),n)),mo=rows.filter(r=>dt(r).getMonth()==n.getMonth()&&dt(r).getFullYear()==n.getFullYear()),rev=mo.filter(lv).reduce((a,r)=>a+(+r.total||0),0),pend=rows.filter(r=>r.status=='new'||r.status=='noanswer').length,low=inv().filter(p=>p.rem<=(D.low||5));
+const days=[];for(let i=13;i>=0;i--){const d=new Date(n);d.setDate(n.getDate()-i);days.push({d:d,c:rows.filter(r=>same(dt(r),d)&&lv(r)).length})}const mx=Math.max.apply(null,days.map(x=>x.c).concat([1]));
+return '<h2>لوحة التحكم</h2><div class="g">'+card(td.length,'طلبات اليوم')+card(mo.length,'طلبات الشهر')+card(M(rev),'إيرادات الشهر (بدون الملغاة والمرتجعة)')+card(pend,'بانتظار المعالجة',pend>0)+card(low.length,'منتجات منخفضة المخزون',low.length>0)+'</div>'+
+'<div class="tw"><h3>آخر 14 يومًا (الطلبات غير الملغاة)</h3><div class="bars">'+days.map(x=>'<div><i style="height:'+Math.round(x.c/mx*90)+'px"></i>'+x.c+'<br>'+x.d.getDate()+'</div>').join('')+'</div></div>'+
+'<div class="tw"><h3>آخر الطلبات</h3><table><tr><th>الرقم</th><th>الاسم</th><th>الهاتف</th><th>الولاية</th><th>المنتج</th><th>الإجمالي</th><th>الحالة</th></tr>'+(rows.slice(0,8).map(rowO).join('')||'<tr><td colspan="7" class="mu">لا توجد طلبات بعد</td></tr>')+'</table></div>'}
+function vOrders(){const cnt=s=>s=='all'?rows.length:rows.filter(r=>r.status==s).length;return '<h2>الطلبات</h2><div class="ch">'+['all'].concat(Object.keys(ST)).map(s=>'<button class="'+(flt==s?'on':'')+'" onclick="flt=\''+s+'\';draw()">'+(s=='all'?'الكل':ST[s])+' ('+cnt(s)+')</button>').join('')+'</div><div style="display:flex;gap:8px;margin-bottom:10px"><input placeholder="بحث بالاسم أو الهاتف" value="'+E(qs)+'" oninput="qs=this.value;tbl()"><button class="bt" onclick="csv()">⬇ CSV</button></div><div class="tw"><table><thead><tr><th>#</th><th>التاريخ</th><th>الاسم</th><th>الهاتف</th><th>الولاية</th><th>المنتج</th><th>الإجمالي</th><th>الحالة</th></tr></thead><tbody id="tb"></tbody></table></div>'}
+const fl=()=>{const s=qs.trim().toLowerCase(),d=s.replace(/\D/g,'');return rows.filter(r=>(flt=='all'||r.status==flt)&&(!s||String(r.name).toLowerCase().indexOf(s)>-1||(d&&String(r.phone).replace(/\D/g,'').indexOf(d)>-1)))};
+function tbl(){const b=$('#tb');if(!b)return;b.innerHTML=fl().map(r=>{const p=String(r.phone).replace(/\D/g,'').replace(/^0/,'213');return '<tr><td>'+E(String(r.id).slice(-5))+'</td><td>'+dt(r).toLocaleDateString('en-GB')+'</td><td>'+E(r.name)+'</td><td dir="ltr"><a class="l" href="tel:'+E(r.phone)+'">'+E(r.phone)+'</a> <a class="l" target="_blank" rel="noopener" href="https://wa.me/'+p+'">💬</a></td><td>'+E(r.wilaya)+'</td><td>'+E(r.product)+(r.qty>1?' ×'+E(r.qty):'')+'</td><td>'+M(r.total)+'</td><td><select onchange="setSt(\''+E(r.id)+'\',this.value)">'+Object.keys(ST).map(s=>'<option value="'+s+'"'+(r.status==s?' selected':'')+'>'+ST[s]+'</option>').join('')+'</select></td></tr>'}).join('')||'<tr><td colspan="8" class="mu">لا نتائج</td></tr>'}
+async function setSt(id,v){const r=rows.find(x=>String(x.id)==id);try{const j=await jp({act:'st',id:id,status:v});if(j&&j.ok){r.status=v;return}}catch(e){}alert('تعذر تحديث الحالة');draw()}
+function csv(){const L=fl(),q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"',c='\ufeff'+[['التاريخ','الاسم','الهاتف','الولاية','البلدية','المنتج','الكمية','الإجمالي','الحالة']].concat(L.map(r=>[r.at,r.name,String(r.phone).replace(/\D/g,''),r.wilaya,r.commune,r.product,r.qty,r.total,ST[r.status]||r.status])).map(a=>a.map(q).join(',')).join('\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:'text/csv;charset=utf-8'}));a.download='orders.csv';a.click()}
+function vStock(){const I=inv();return '<h2>المخزون</h2><p class="mu">المتبقي = الكمية عند آخر نشر − الطلبات غير الملغاة والمرتجعة منذ ذلك النشر. بعد إعادة التموين حدّث الرقم في المحرر وانشر من جديد.</p><div class="tw"><table><tr><th>المنتج</th><th>عند آخر نشر</th><th>مباع منذ النشر</th><th>المتبقي</th><th>الحالة</th></tr>'+(I.map(p=>'<tr><td>'+E(p.title)+'</td><td>'+p.stock+'</td><td>'+p.sold+'</td><td><b>'+Math.max(p.rem,0)+'</b></td><td>'+(p.rem<=0?'🔴 نفد':p.rem<=(D.low||5)?'🟠 منخفض':'🟢 جيد')+'</td></tr>').join('')||'<tr><td colspan="5" class="mu">لا منتجات بكمية محددة. ضع رقمًا في خانة «المخزون المتبقي» داخل المحرر.</td></tr>')+'</table></div>'}
+const grp=(f,v)=>{const m={};rows.filter(lv).forEach(r=>{const k=f(r)||'—';m[k]=m[k]||{n:0,v:0};m[k].n++;m[k].v+=+v(r)||0});return Object.keys(m).map(k=>({k:k,n:m[k].n,v:m[k].v})).sort((a,b)=>b.n-a.n).slice(0,8)};
+const bars=(L,f)=>{const mx=Math.max.apply(null,L.map(x=>x.n).concat([1]));return L.map(x=>'<div class="rw"><span>'+E(x.k)+'</span><u><i style="width:'+Math.round(x.n/mx*100)+'%"></i></u><b>'+x.n+'</b><span class="mu">'+(f?M(x.v):'')+'</span></div>').join('')||'<p class="mu" style="padding:0 16px">لا بيانات</p>'};
+function vStats(){const dl=rows.filter(r=>r.status=='delivered').length,rt=rows.filter(r=>r.status=='returned').length,ok=dl+rt?Math.round(dl/(dl+rt)*100)+'%':'—',cf=rows.length?Math.round(rows.filter(r=>['confirmed','shipped','delivered'].indexOf(r.status)>-1).length/rows.length*100)+'%':'—';
+return '<h2>الإحصائيات</h2><div class="g">'+card(rows.length,'إجمالي الطلبات')+card(cf,'نسبة التأكيد')+card(ok,'نسبة نجاح التسليم (مسلّم ÷ مسلّم+مرتجع)')+card(rt,'مرتجعات')+'</div><div class="tw"><h3>أكثر المنتجات طلبًا</h3>'+bars(grp(r=>r.product,r=>r.total),1)+'</div><div class="tw"><h3>أكثر الولايات طلبًا</h3>'+bars(grp(r=>r.wilaya,r=>r.total),1)+'</div><div class="tw"><h3>توزيع الحالات</h3>'+bars(Object.keys(ST).map(s=>({k:ST[s],n:rows.filter(r=>r.status==s).length})).filter(x=>x.n),0)+'</div>'}
+if(K)load(true).then(o=>{if(o)start()});
+</script></body></html>
