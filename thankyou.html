@@ -86,7 +86,7 @@ const shs0=q=>D.script?(async()=>{const go=()=>fetch(D.script,{method:'POST',mod
 ;
 /* صفحة الشكر المستقلة /thankyou: تُحفظ بيانات الطلب ثم ننتقل لصفحة حقيقية بعنوان خاص (ليعمل تتبع البكسل) */
 const goTy=(i,p,nm,tot,x,pv)=>{if(D.preview){thanks(i,p,nm,tot,x);return}
-try{sessionStorage.setItem('_ty',JSON.stringify({i:i,nm:nm,tot:tot,x:x||null,ob:window.__ob?String(window.__ob):'',pv:pv||null,eid:Date.now().toString(36)+Math.random().toString(36).slice(2,8),ff:0}))}catch(e0){thanks(i,p,nm,tot,x);if(pv)fb('track','Purchase',pv);return}
+try{sessionStorage.setItem('_ty',JSON.stringify({i:i,nm:nm,tot:tot,x:x||null,ob:window.__ob?String(window.__ob):'',pv:pv||null,eid:window.__eid||Date.now().toString(36)+Math.random().toString(36).slice(2,8),ff:0}))}catch(e0){thanks(i,p,nm,tot,x);if(pv)fb('track','Purchase',pv);return}
 location.href='thankyou'};
 const tyPage=()=>{let s=null;try{s=JSON.parse(sessionStorage.getItem('_ty')||'null')}catch(e0){}
 if(!D.preview&&D.script&&!window._sqf){window._sqf=1;try{const a=JSON.parse(localStorage.getItem('_sq')||'[]');localStorage.removeItem('_sq');a.forEach(z=>shs0(new URLSearchParams(z)))}catch(e0){}}
@@ -164,12 +164,13 @@ f.addEventListener('focusin',()=>{if(!ic.v){ic.v=1;fb('track','InitiateCheckout'
 const fv=()=>{if(!f.reportValidity())return null;const d=new FormData(f);
 if(D.sh_phone!==false){const ph=String(d.get('phone')).replace(/[\s.\-()]/g,'');const ok=/^0[2567]\d{8}$/.test(ph);if(!ok){$('#er').textContent=T('رقم الهاتف غير صحيح: يجب أن يتكون من 10 أرقام ويبدأ بـ 05 أو 06 أو 07 أو 02');return null}}
 $('#er').textContent='';return d};
+const ckv=n=>{const m=document.cookie.match(new RegExp('(?:^|; )'+n+'=([^;]*)'));return m?decodeURIComponent(m[1]):''},fbcv=()=>{const c=ckv('_fbc');if(c)return c;const m=/[?&]fbclid=([^&#]+)/.exec(location.search);return m?'fb.1.'+Date.now()+'.'+m[1]:''};
 const shs=q=>D.script?(async()=>{const go=()=>fetch(D.script,{method:'POST',mode:'no-cors',body:(D.ordKey&&q.set("k",D.ordKey),q),keepalive:true});try{await go()}catch(e){try{await new Promise(r=>setTimeout(r,1500));await go()}catch(e2){try{const a=JSON.parse(localStorage.getItem('_sq')||'[]');a.push(q.toString());localStorage.setItem('_sq',JSON.stringify(a.slice(-20)))}catch(x){}}}})():Promise.resolve();
 if(!D.preview&&D.script&&!window._sqf){window._sqf=1;try{const a=JSON.parse(localStorage.getItem('_sq')||'[]');localStorage.removeItem('_sq');a.forEach(s=>shs(new URLSearchParams(s)))}catch(x){}}
 const rd=n=>D.ppDir?+(+n).toFixed(2):Math.round(n);const ordr=(d,tot,x)=>{const w=W[d.get('wilaya')];return new URLSearchParams({product:p.title,name:d.get('name')||'',phone:String(d.get('phone')||'').replace(/[\s.-]/g,''),email:String(d.get('email')||'').trim(),wilaya:w?w.n:'',commune:d.get('commune')||'',delivery:d.get('dt')=='h'?'منزل':'مكتب',variant:d.get('variant')||'',note:(D.xf||[]).map((y,k)=>y.l?y.l+': '+(d.get('x'+k)||''):'').filter(Boolean).join(' | '),qty:d.get('qty')||1,price:rd(f._p[0]),ship:rd(f._p[1]),total:rd(tot),cur:D.ppDir?(D.ppCur||'USD'):(D.cu&&D.cu!='DZD'?D.cu:''),...x})};
 f.onsubmit=async e=>{e.preventDefault();window.__ob=null;const d=fv();if(!d)return;
 const tot=calc(),b=f.querySelector('button.btn');b.disabled=true;b.textContent=T('جاري الإرسال...');
-try{window.__ob=ordr(d,tot,{});window.__send=q=>D.preview?Promise.resolve():Promise.all([shs(q)]);if(!D.preview){if(!D.script)throw 0;const q0=window.__ob;await Promise.all([shs(q0)])}
+try{window.__eid=Date.now().toString(36)+Math.random().toString(36).slice(2,8);window.__ob=ordr(d,tot,{eid:window.__eid,fbp:ckv('_fbp'),fbc:fbcv(),ua:navigator.userAgent.slice(0,250),url:location.href.split('#')[0]});window.__send=q=>D.preview?Promise.resolve():Promise.all([shs(q)]);if(!D.preview){if(!D.script)throw 0;const q0=window.__ob;await Promise.all([shs(q0)])}
 goTy(i,p,d.get('name'),tot,null,{value:tot,currency:(D.ppDir?D.ppCur||'USD':D.cu||'DZD'),content_name:p.title})}
 catch(x){b.disabled=false;b.textContent=D.fBtn;$('#er').textContent=D.script?T('تعذر إرسال الطلب. تحقق من اتصالك أو تواصل معنا مباشرة.'):'⚠️ لم يُربط Google Sheet بعد: أضف الرابط في وضع المطور.'}};
 fb('track','ViewContent',{content_name:p.title,value:p.price,currency:(D.ppDir?D.ppCur||'USD':D.cu||'DZD')})};
